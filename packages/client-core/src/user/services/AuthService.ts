@@ -29,6 +29,8 @@ import i18n from 'i18next'
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
+import type { FeathersClient } from '@ir-engine/common/src/API'
+
 import { API } from '@ir-engine/common/src/API'
 import config, { validateEmail, validatePhoneNumber } from '@ir-engine/common/src/config'
 import { AuthUserSeed, resolveAuthUser } from '@ir-engine/common/src/interfaces/AuthUser'
@@ -170,7 +172,7 @@ export interface LinkedInLoginForm {
  */
 async function _resetToGuestToken(options = { reset: true }) {
   if (options.reset) {
-    await API.instance.authentication.reset()
+    await (API.instance as FeathersClient).authentication.reset()
   }
   const newProvider = await API.instance.service(identityProviderPath).create({
     type: 'guest',
@@ -179,7 +181,7 @@ async function _resetToGuestToken(options = { reset: true }) {
   })
   const accessToken = newProvider.accessToken!
   console.log(`Created new guest accessToken: ${accessToken}`)
-  await API.instance.authentication.setAccessToken(accessToken as string)
+  await (API.instance as FeathersClient).authentication.setAccessToken(accessToken as string)
   return accessToken
 }
 
@@ -195,22 +197,26 @@ export const AuthService = {
       const accessToken = !forceClientAuthReset && authState?.authUser?.accessToken?.value
 
       if (forceClientAuthReset) {
-        await API.instance.authentication.reset()
+        await (API.instance as FeathersClient).authentication.reset()
       }
       if (accessToken) {
-        await API.instance.authentication.setAccessToken(accessToken as string)
+        await (API.instance as FeathersClient).authentication.setAccessToken(accessToken as string)
       } else {
         await _resetToGuestToken({ reset: false })
       }
 
       let res: AuthenticationResult
       try {
-        res = await API.instance.reAuthenticate()
+        res = await (API.instance as FeathersClient).reAuthenticate()
       } catch (err) {
-        if (err.className === 'not-found' || (err.className === 'not-authenticated' && err.message === 'jwt expired')) {
+        if (
+          err.className === 'not-found' ||
+          (err.className === 'not-authenticated' && err.message === 'jwt expired') ||
+          (err.className === 'not-authenticated' && err.message === 'invalid algorithm')
+        ) {
           authState.merge({ isLoggedIn: false, user: UserSeed, authUser: AuthUserSeed })
           await _resetToGuestToken()
-          res = await API.instance.reAuthenticate()
+          res = await (API.instance as FeathersClient).reAuthenticate()
         } else {
           logger.error(err, 'Error re-authenticating')
           throw err
@@ -222,7 +228,7 @@ export const AuthService = {
         if (!identityProvider?.id) {
           authState.merge({ isLoggedIn: false, user: UserSeed, authUser: AuthUserSeed })
           await _resetToGuestToken()
-          res = await API.instance.reAuthenticate()
+          res = await (API.instance as FeathersClient).reAuthenticate()
         }
         const authUser = resolveAuthUser(res)
         // authUser is now { accessToken, authentication, identityProvider }
@@ -278,7 +284,7 @@ export const AuthService = {
     authState.merge({ isProcessing: true, error: '' })
 
     try {
-      const authenticationResult = await API.instance.authenticate({
+      const authenticationResult = await (API.instance as FeathersClient).authenticate({
         strategy: 'local',
         email: form.email,
         password: form.password
@@ -392,8 +398,8 @@ export const AuthService = {
 
         if (newTokenResult?.token) {
           getMutableState(AuthState).merge({ isProcessing: true, error: '' })
-          await API.instance.authentication.setAccessToken(newTokenResult.token)
-          const res = await API.instance.reAuthenticate(true)
+          await (API.instance as FeathersClient).authentication.setAccessToken(newTokenResult.token)
+          const res = await (API.instance as FeathersClient).reAuthenticate(true)
           const authUser = resolveAuthUser(res)
           await API.instance.service(identityProviderPath).remove(ipToRemove.id)
           const authState = getMutableState(AuthState)
@@ -409,8 +415,8 @@ export const AuthService = {
     const authState = getMutableState(AuthState)
     authState.merge({ isProcessing: true, error: '' })
     try {
-      await API.instance.authentication.setAccessToken(accessToken as string)
-      const res = await API.instance.authenticate({
+      await (API.instance as FeathersClient).authentication.setAccessToken(accessToken as string)
+      const res = await (API.instance as FeathersClient).authenticate({
         strategy: 'jwt',
         accessToken
       })
@@ -459,7 +465,7 @@ export const AuthService = {
     const authState = getMutableState(AuthState)
     authState.merge({ isProcessing: true, error: '' })
     try {
-      await API.instance.logout()
+      await (API.instance as FeathersClient).logout()
       authState.merge({ isLoggedIn: false, user: UserSeed, authUser: AuthUserSeed })
     } catch (_) {
       authState.merge({ isLoggedIn: false, user: UserSeed, authUser: AuthUserSeed })

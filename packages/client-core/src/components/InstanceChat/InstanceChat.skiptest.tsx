@@ -32,10 +32,10 @@ import { ChannelID, MessageID, UserID } from '@ir-engine/common/src/schema.type.
 import { createEngine } from '@ir-engine/ecs'
 import { getMutableState } from '@ir-engine/hyperflux'
 
+import { API } from '@ir-engine/common'
 import { InstanceChat } from '.'
 import { createDOM } from '../../../tests/createDOM'
 import { createMockAPI } from '../../../tests/createMockAPI'
-import { API } from '../../API'
 import { ChannelState } from '../../social/services/ChannelService'
 
 describe('Instance Chat Component', () => {

@@ -23,40 +23,22 @@ All portions of the code written by the Infinite Reality Engine team are Copyrig
 Infinite Reality Engine. All Rights Reserved.
 */
 
-import type { FeathersClient } from '@ir-engine/common/src/API'
+import type { Knex } from 'knex'
 
-type MockFeathers = {
-  on: (type: string, cb: () => void) => void
-  off: (type: string, cb: () => void) => void
-  find: (type: string) => Promise<void>
-  get: (type: string) => Promise<void>
-  create: (type: string) => Promise<void>
-  patch: (type: string) => Promise<void>
-  update: (type: string) => Promise<void>
-  remove: (type: string) => Promise<void>
+import { authenticationSettingPath } from '@ir-engine/common/src/schemas/setting/authentication-setting.schema'
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.alterTable(authenticationSettingPath, async (table) => {
+    table.string('secret', 4095).nullable().alter()
+  })
 }
 
-type ServicesToMock = {
-  [name: string]: MockFeathers
-}
-
-export const createMockAPI = (servicesToMock?: ServicesToMock) => {
-  return {
-    service: (service: string) => {
-      if (servicesToMock && servicesToMock[service]) {
-        return servicesToMock[service]
-      } else {
-        return {
-          on: (type, cb) => {},
-          off: (type, cb) => {},
-          find: (type) => {},
-          get: (type) => {},
-          create: (type) => {},
-          patch: (type) => {},
-          update: (type) => {},
-          remove: (type) => {}
-        }
-      }
-    }
-  } as FeathersClient
-}
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+export async function down(knex: Knex): Promise<void> {}

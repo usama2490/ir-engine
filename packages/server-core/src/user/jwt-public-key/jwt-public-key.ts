@@ -23,40 +23,29 @@ All portions of the code written by the Infinite Reality Engine team are Copyrig
 Infinite Reality Engine. All Rights Reserved.
 */
 
-import type { FeathersClient } from '@ir-engine/common/src/API'
+// Initializes the `login` service on path `/login`
 
-type MockFeathers = {
-  on: (type: string, cb: () => void) => void
-  off: (type: string, cb: () => void) => void
-  find: (type: string) => Promise<void>
-  get: (type: string) => Promise<void>
-  create: (type: string) => Promise<void>
-  patch: (type: string) => Promise<void>
-  update: (type: string) => Promise<void>
-  remove: (type: string) => Promise<void>
+import { jwtPublicKeyMethods, jwtPublicKeyPath } from '@ir-engine/common/src/schemas/user/jwt-public-key.schema'
+import { Application } from '../../../declarations'
+import { JWTPublicKeyService } from './jwt-public-key.class'
+import jwtPublicKeyDocs from './jwt-public-key.docs'
+import hooks from './jwt-public-key.hooks'
+
+declare module '@ir-engine/common/declarations' {
+  interface ServiceTypes {
+    [jwtPublicKeyPath]: JWTPublicKeyService
+  }
 }
 
-type ServicesToMock = {
-  [name: string]: MockFeathers
-}
+export default (app: Application): void => {
+  app.use(jwtPublicKeyPath, new JWTPublicKeyService(app), {
+    // A list of all methods this service exposes externally
+    methods: jwtPublicKeyMethods,
+    // You can add additional custom events to be sent to clients here
+    events: [],
+    docs: jwtPublicKeyDocs
+  })
 
-export const createMockAPI = (servicesToMock?: ServicesToMock) => {
-  return {
-    service: (service: string) => {
-      if (servicesToMock && servicesToMock[service]) {
-        return servicesToMock[service]
-      } else {
-        return {
-          on: (type, cb) => {},
-          off: (type, cb) => {},
-          find: (type) => {},
-          get: (type) => {},
-          create: (type) => {},
-          patch: (type) => {},
-          update: (type) => {},
-          remove: (type) => {}
-        }
-      }
-    }
-  } as FeathersClient
+  const service = app.service(jwtPublicKeyPath)
+  service.hooks(hooks)
 }

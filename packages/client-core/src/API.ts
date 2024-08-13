@@ -30,6 +30,7 @@ import type { FeathersApplication } from '@feathersjs/feathers'
 import Primus from 'primus-client'
 
 import { API as CommonAPI } from '@ir-engine/common'
+import type { FeathersClient } from '@ir-engine/common/src/API'
 
 import type { ServiceTypes } from '@ir-engine/common/declarations'
 import config from '@ir-engine/common/src/config'
@@ -62,10 +63,9 @@ export class API {
       })
     )
 
-    primus.on('reconnected', () => API.instance.client.reAuthenticate(true))
+    primus.on('reconnected', () => (API.instance as unknown as FeathersClient).reAuthenticate(true))
 
     API.instance = new API()
-    API.instance.client = feathersClient as any
 
     CommonAPI.instance = feathersClient
   }

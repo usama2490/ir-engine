@@ -13,8 +13,10 @@
   "author": "Infinite Reality Engine",
   "license": "CPAL",
   "dependencies": {
+    "@feathersjs/authentication-client": "5.0.5",
     "cross-fetch": "^3.1.5",
     "lru-cache": "8.0.4",
+    "primus-client": "^7.3.4",
     "ts-toolbelt": "^9.6.0"
   },
   "devDependencies": {

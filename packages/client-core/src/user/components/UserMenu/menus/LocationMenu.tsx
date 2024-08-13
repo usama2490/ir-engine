@@ -40,7 +40,7 @@ import TableRow from '@ir-engine/ui/src/primitives/mui/TableRow'
 import TextField from '@ir-engine/ui/src/primitives/mui/TextField'
 import Typography from '@ir-engine/ui/src/primitives/mui/Typography'
 
-import { API } from '../../../../API'
+import { API } from '@ir-engine/common'
 import { LocationSeed } from '../../../../social/services/LocationService'
 import styles from '../index.module.scss'
 
@@ -68,7 +68,7 @@ const LocationMenu = (props: Props) => {
   }, [])
 
   const fetchLocations = (page: number, rows: number, search?: string) => {
-    API.instance.client
+    API.instance
       .service(locationPath)
       .find({
         query: {
