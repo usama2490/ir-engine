@@ -87,13 +87,18 @@ export class ProjectService<T = ProjectType, ServiceParams extends Params = Proj
   app: Application
 
   constructor(options: KnexAdapterOptions, app: Application) {
+    console.log('project service constructor')
     super(options)
     this.app = app
 
-    this.app.isSetup.then(() => this._addOrgNameToProject())
+    this.app.isSetup.then(() => {
+      console.log('APP IS SET UP')
+      this._addOrgNameToProject()
+    })
   }
 
   async _addOrgNameToProject(): Promise<any> {
+    console.log('_addOrgNameToProject', getState(ServerState).serverMode)
     if (getState(ServerState).serverMode !== ServerMode.API) return
 
     const storageProvider = getStorageProvider()
