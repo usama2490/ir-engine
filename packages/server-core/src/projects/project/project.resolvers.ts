@@ -38,7 +38,8 @@ import type { HookContext } from '@ir-engine/server-core/declarations'
 
 export const projectResolver = resolve<ProjectType, HookContext>({
   projectPermissions: virtual(async (project, context) => {
-    return context.params.populateProjectPermissions
+    console.log('Resolving project-permissions', project)
+    const perms = context.params.populateProjectPermissions
       ? ((await context.app.service(projectPermissionPath).find({
           query: {
             projectId: project.id
@@ -46,33 +47,51 @@ export const projectResolver = resolve<ProjectType, HookContext>({
           paginate: false
         })) as ProjectPermissionType[])
       : []
+    console.log('project-permissions', perms)
+    return perms
   }),
 
   settings: virtual(async (project, context) => {
+    console.log('Resolving project settings', project)
     if (context.event !== 'removed') {
-      return await context.app.service(projectSettingPath).find({
+      const settings = await context.app.service(projectSettingPath).find({
         query: {
           projectId: project.id
         },
         paginate: false
       })
+      console.log('returning settings', project)
+      return settings
     }
   }),
 
   assetsOnly: virtual(async (project, context) => {
-    return !!project.assetsOnly
+    console.log('Resolving assetsOnly', project)
+    const assetsOnly = !!project.assetsOnly
+    console.log('assetsOnly', assetsOnly)
+    return assetsOnly
   }),
 
   hasLocalChanges: virtual(async (project, context) => {
-    return !!project.hasLocalChanges
+    console.log('Resolving hasLocalChanges', project)
+    const hasLocalChanges = !!project.hasLocalChanges
+    console.log('returning hasLocalChanges', hasLocalChanges)
+    return hasLocalChanges
   }),
 
   needsRebuild: virtual(async (project, context) => {
-    return !!project.needsRebuild
+    console.log('Resolving needsRebuild', project)
+    const needsRebuild = !!project.needsRebuild
+    console.log('returning needsRebuild', needsRebuild)
   }),
 
   commitDate: virtual(async (project) => {
-    if (project.commitDate) return fromDateTimeSql(project.commitDate)
+    console.log('resolving commitDate', project)
+    if (project.commitDate) {
+      const commitDate = fromDateTimeSql(project.commitDate)
+      console.log('returning commitDate', commitDate)
+      return commitDate
+    }
   }),
   createdAt: virtual(async (project) => fromDateTimeSql(project.createdAt)),
   updatedAt: virtual(async (project) => fromDateTimeSql(project.updatedAt))
@@ -82,18 +101,25 @@ export const projectExternalResolver = resolve<ProjectType, HookContext>({})
 
 export const projectDataResolver = resolve<ProjectType, HookContext>({
   id: async () => {
+    console.log('Creating project ID')
     return uuidv4()
   },
   createdAt: getDateTimeSql,
   updatedBy: async (_, __, context) => {
-    return context.params?.user?.id || null
+    console.log('Adding updatedBy', context?.params?.user?.id)
+    const returned = context?.params?.user?.id || null
+    console.log('userId to add', returned)
+    return returned
   },
   updatedAt: getDateTimeSql
 })
 
 export const projectPatchResolver = resolve<ProjectType, HookContext>({
   updatedBy: async (_, __, context) => {
-    return context.params?.user?.id || null
+    console.log('Adding updatedBy')
+    const returned = context.params?.user?.id || null
+    console.log('userId to add', returned)
+    return returned
   },
   updatedAt: getDateTimeSql
 })
