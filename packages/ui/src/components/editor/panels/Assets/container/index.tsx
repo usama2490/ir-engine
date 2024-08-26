@@ -134,7 +134,7 @@ const ViewModeSettings = () => {
       position={'bottom left'}
       trigger={
         <Tooltip content={t('editor:layout.filebrowser.view-mode.settings.name')}>
-          <Button startIcon={<IoSettingsSharp />} className="h-7 w-7 rounded-lg bg-[#2F3137] p-0" />
+          <Button startIcon={<IoSettingsSharp />} className="h-7 w-7 rounded-lg bg-[#212226] p-0" />
         </Tooltip>
       }
     >
@@ -340,8 +340,8 @@ const AssetCategory = (props: {
   return (
     <div
       className={twMerge(
-        'rounded-md bg-[#141619]',
-        selectedCategory?.name === category.name && 'text-primary bg-[#191B1F]',
+        'rounded-md bg-[#2C2E33]',
+        selectedCategory?.name === category.name && 'text-primary bg-[#212226]',
         category.depth === 0 ? 'min-h-9' : 'min-h-7'
       )}
       style={{
@@ -393,7 +393,7 @@ export function AssetsBreadcrumb({
   onSelectCategory: (c: Category) => void
 }) {
   return (
-    <div className="flex h-[28px] w-96 items-center gap-2 rounded-lg border border-theme-input bg-[#141619] px-2 ">
+    <div className="flex h-[28px] w-96 items-center gap-2 rounded-lg border border-theme-input bg-[#2C2E33] px-2 ">
       <HiOutlineFolder className="text-xs text-[#A3A3A3]" />
       {parentCategories.map((category) => (
         <span
@@ -670,7 +670,7 @@ const AssetPanel = () => {
             }}
             labelClassname="text-sm text-red-500"
             containerClassname="flex h-full w-auto"
-            className="h-7 rounded-lg border border-theme-input bg-[#141619] px-2 py-0 text-xs text-[#A3A3A3] placeholder:text-[#A3A3A3] focus-visible:ring-0"
+            className="h-7 rounded-lg border border-theme-input bg-[#2C2E33] px-2 py-0 text-xs text-[#A3A3A3] placeholder:text-[#A3A3A3] focus-visible:ring-0"
             startComponent={<HiMagnifyingGlass className="h-[14px] w-[14px] text-[#A3A3A3]" />}
           />
         </div>

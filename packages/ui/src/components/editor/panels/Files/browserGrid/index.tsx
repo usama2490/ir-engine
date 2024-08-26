@@ -133,7 +133,7 @@ export const FileTableListBody = ({
   return (
     <tr
       key={file.key}
-      className={`h-9 text-[#a3a3a3] hover:bg-[#191B1F]`}
+      className={`h-9 text-[#a3a3a3] hover:bg-[#2C2E33]`}
       onContextMenu={onContextMenu}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
@@ -166,7 +166,7 @@ export const FileGridItem: React.FC<FileGridItemProps> = (props) => {
   return (
     <div
       className={`flex h-auto max-h-32 w-28 cursor-pointer flex-col items-center text-center ${
-        props.isSelected ? 'rounded bg-[#191B1F]' : ''
+        props.isSelected ? 'rounded bg-[#212226]' : ''
       }`}
       onDoubleClick={props.item.isFolder ? props.onDoubleClick : undefined}
       onClick={props.onClick}

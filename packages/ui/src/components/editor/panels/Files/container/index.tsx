@@ -232,7 +232,7 @@ export const ViewModeSettings = () => {
       position={'bottom left'}
       trigger={
         <Tooltip content={t('editor:layout.filebrowser.view-mode.settings.name')}>
-          <Button startIcon={<IoSettingsSharp />} className="h-7 w-7 rounded-lg bg-[#2F3137] p-0" />
+          <Button startIcon={<IoSettingsSharp />} className="h-7 w-7 rounded-lg bg-[#212226] p-0" />
         </Tooltip>
       }
     >
@@ -494,7 +494,7 @@ const FileBrowserContentPanel: React.FC<FileBrowserContentPanelProps> = (props) 
     breadcrumbDirectoryFiles = breadcrumbDirectoryFiles.filter((_, idx) => idx >= nestedIndex)
 
     return (
-      <div className="flex h-[28px] w-96 items-center gap-1 rounded-lg border border-theme-input bg-[#141619] px-2 ">
+      <div className="flex h-[28px] w-96 items-center gap-1 rounded-lg border border-theme-input bg-[#2C2E33] px-2 ">
         <HiOutlineFolder className="text-sm text-[#A3A3A3]" />
         {breadcrumbDirectoryFiles.map((file, index, arr) => (
           <Fragment key={index}>
@@ -775,7 +775,7 @@ const FileBrowserContentPanel: React.FC<FileBrowserContentPanelProps> = (props) 
             }}
             labelClassname="text-sm text-red-500"
             containerClassname="flex h-full w-auto"
-            className="h-7 rounded-lg border border-theme-input bg-[#141619] px-2 py-0 text-xs text-[#A3A3A3] placeholder:text-[#A3A3A3] focus-visible:ring-0"
+            className="h-7 rounded-lg border border-theme-input bg-[#2C2E33] px-2 py-0 text-xs text-[#A3A3A3] placeholder:text-[#A3A3A3] focus-visible:ring-0"
             startComponent={<HiMagnifyingGlass className="h-[14px] w-[14px] text-[#A3A3A3]" />}
           />
         </div>

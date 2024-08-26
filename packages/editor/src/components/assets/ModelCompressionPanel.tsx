@@ -321,7 +321,7 @@ export default function ModelCompressionPanel({
             <Button
               key={index}
               variant="transparent"
-              className="text-nowrap rounded-full bg-[#2F3137] px-2 py-0.5"
+              className="text-nowrap rounded-full bg-[#212226] px-2 py-0.5"
               onClick={() => applyPreset(lodItem.params)}
               endIcon={
                 !LODList.find((l) => l.params.dst === lodItem.params.dst) && (

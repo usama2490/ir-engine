@@ -54,7 +54,7 @@ const Tooltip = ({ title, titleClassName, content, children, className, ...rest 
         {title && (
           <span
             className={twMerge(
-              'block rounded-t border-b border-b-[#212226] bg-[#141619] px-3 py-1.5 text-sm text-[#F5F5F5]',
+              'block rounded-t border-b border-b-[#212226] bg-[#2C2E33] px-3 py-1.5 text-sm text-[#F5F5F5]',
               titleClassName
             )}
           >

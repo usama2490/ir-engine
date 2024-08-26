@@ -29,7 +29,7 @@ import { twMerge } from 'tailwind-merge'
 
 export function SidebarButton({ children, className, ...rest }) {
   return (
-    <Button className={twMerge('bg-[#141619]', className)} {...rest}>
+    <Button className={twMerge('bg-[#2C2E33]', className)} {...rest}>
       {children}
     </Button>
   )
