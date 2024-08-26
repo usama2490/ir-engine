@@ -38,7 +38,7 @@ import { ComponentEditorsState } from '@ir-engine/editor/src/services/ComponentE
 import { ComponentShelfCategoriesState } from '@ir-engine/editor/src/services/ComponentShelfCategoriesState'
 import { SelectionState } from '@ir-engine/editor/src/services/SelectionServices'
 import { GrStatusPlaceholder } from 'react-icons/gr'
-import { IoMdAddCircle } from 'react-icons/io'
+import { TbCirclePlus } from 'react-icons/tb'
 import { twMerge } from 'tailwind-merge'
 import Button from '../../../../../primitives/tailwind/Button'
 import Text from '../../../../../primitives/tailwind/Text'
@@ -63,9 +63,8 @@ const ComponentListItem = ({ item, onSelect }: { item: Component; onSelect: () =
 
   return (
     <Button
-      variant="transparent"
       fullWidth
-      className="w-full bg-theme-primary p-2 text-[#B2B5BD]"
+      className="w-full bg-[#2C2E33] p-2 text-[#B2B5BD]"
       onClick={() => {
         const entities = SelectionState.getSelectedEntities()
         EditorControlFunctions.addOrRemoveComponent(entities, item, true)
@@ -88,9 +87,8 @@ const ComponentListItem = ({ item, onSelect }: { item: Component; onSelect: () =
 const PrefabListItem = ({ item, onSelect }: { item: PrefabShelfItem; onSelect: () => void }) => {
   return (
     <Button
-      variant="transparent"
       fullWidth
-      className="w-full bg-theme-primary p-2 text-[#B2B5BD]"
+      className="w-full bg-[#2C2E33] p-2 text-[#B2B5BD]"
       onClick={() => {
         const url = item.url
         if (!url.length) {
@@ -100,7 +98,7 @@ const PrefabListItem = ({ item, onSelect }: { item: PrefabShelfItem; onSelect: (
         }
         onSelect()
       }}
-      startIcon={<IoMdAddCircle className="h-4 w-4 text-[#B2B5BD]" />}
+      startIcon={<TbCirclePlus className="h-4 w-4 text-[#B2B5BD]" />}
     >
       <div className="ml-4 w-full">
         <Text className="mb-1 block text-left text-sm text-[#B2B5BD]">{item.name}</Text>
@@ -126,8 +124,8 @@ const SceneElementListItem = ({
   return (
     <button
       className={twMerge(
-        'place-items-center gap-1 rounded-xl border-[1px] border-[#212226] bg-theme-primary px-3 py-2.5 text-sm font-medium',
-        selected ? 'text-primary border-[#42454D] bg-[#212226]' : 'text-[#B2B5BD]'
+        'place-items-center gap-1 rounded-xl bg-[#212226] px-3 py-2.5 text-sm font-medium',
+        selected ? 'text-primary bg-[#2C2E33]' : 'text-[#9CA0AA]'
       )}
       onClick={onClick}
     >
@@ -248,7 +246,7 @@ export function ElementList({ type, onSelect }: { type: ElementsType; onSelect: 
       </div>
 
       {!isInSearchMode.value && (
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-3 gap-4 p-4">
           {shelves.map(([category, _items], index) => (
             <SceneElementListItem
               key={category}
@@ -270,7 +268,7 @@ export function ElementList({ type, onSelect }: { type: ElementsType; onSelect: 
       )}
 
       {(isInSearchMode.value || selectedCategories.value.length > 0) && (
-        <ul className="w-full">
+        <ul className="w-full space-y-1">
           {shelves.flatMap(([_, items], index) =>
             selectedCategories.value.includes(index)
               ? items.map((item: Component | PrefabShelfItem) =>
