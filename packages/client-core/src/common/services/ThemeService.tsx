@@ -112,7 +112,7 @@ const darkTheme: CSSClasses = {
   'bg-surface-card': '#292a2c',
   'bg-table-secondary': '#212226',
   'bg-blue-secondary': '#2A3753',
-  'bg-studio-surface': '#191B1F',
+  'bg-studio-surface': '#212226',
   'bg-banner-informative': '#D9770633',
 
   'bg-tag-green': '#064E3B',
