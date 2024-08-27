@@ -455,6 +455,8 @@
       "secure": "Secure",
       "auth": "Auth",
       "from": "From",
+      "for": "For",
+      "to": "To",
       "subject": "Subject",
       "login": "Login",
       "friend": "Friend",
@@ -530,7 +532,12 @@
       "webRTCSettings": {
         "main": "WebRTC Settings",
         "useCustomICEServers": "Use custom iceServers configuration",
-        "iceServers": "iceServers (STUN/TURN configuration; must provide proper JSON)",
+        "iceServers": "iceServers (STUN/TURN configuration)",
+        "iceServer": "iceServer #",
+        "iceURL": "ICE URL #",
+        "username": "Username",
+        "credential": "Password",
+        "useFixedCredentials": "Use fixed username/password to authenticate STUN/TURN server",
         "useTimeLimitedCredentials": "Use time-limited credentials to authenticate STUN/TURN server",
         "webRTCStaticAuthSecretKey": "Shared static-auth-secret for authenticating STUN/TURN server",
         "usePrivateInstanceserverIP": "Return instanceservers' raw private IP address instead of DNS record"
@@ -697,6 +704,7 @@
     "server": {
       "servers": "Servers",
       "migrations": "Migrations",
+      "apiJobs": "API Jobs",
       "loading": "Fetching Server Info",
       "loadingLogs": "Fetching Server Logs",
       "name": "Name",
@@ -729,10 +737,20 @@
       "confirmPodDelete": "Do you want to delete pod",
       "viewLogs": "View Logs",
       "columns": {
+        "migrationsInfo": {
         "id": "ID",
         "name": "Name",
         "batch": "Batch",
         "migration_time": "Migration Time"
+        },
+        "apiJobs": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "return_data": "Return Data"
+        }
       }
     },
     "recording": {
@@ -755,6 +773,23 @@
         "route": "Route",
         "action": "Active"
       }
+    },
+    "history": {
+      "publishedLocation": "published the location",
+      "modifiedLocation": "modified the location",
+      "unpublishedLocation": "unpublished the location",
+      "fromScene": "from the scene",
+      "added": "added the",
+      "created": "created the",
+      "removed": "removed the",
+      "renamed": "renamed a",
+      "modified": "modified the",
+      "accessTo": "access to",
+      "updatedTags": "updated the tags for",
+      "createdThumbnail": "created a thumbnail: ",
+      "updatedThumbnail": "updated the thumbnail of the resource: ",
+      "removedThumbnail": "removed the thumbnail for the resource: ",
+      "updatePermission": "updated the permission of the user"
     }
   }
 }
