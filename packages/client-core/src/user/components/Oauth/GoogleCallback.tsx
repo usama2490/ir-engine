@@ -27,6 +27,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
+import { config } from '@ir-engine/common/src/config'
 import { InstanceID } from '@ir-engine/common/src/schema.type.module'
 import { getMutableState, useHookstate } from '@ir-engine/hyperflux'
 import Button from '@ir-engine/ui/src/primitives/mui/Button'
@@ -37,7 +38,7 @@ import styles from './styles.module.scss'
 
 const GoogleCallbackComponent = (props): JSX.Element => {
   const { t } = useTranslation()
-  const initialState = { error: '', token: '' }
+  const initialState = { error: '', token: '', email: '', promptForConnection: 'false', loginToken: '' }
   const [state, setState] = useState(initialState)
   const search = new URLSearchParams(useLocation().search)
 
@@ -46,24 +47,39 @@ const GoogleCallbackComponent = (props): JSX.Element => {
     const token = search.get('token') as string
     const type = search.get('type') as string
     const path = search.get('path') as string
+    const promptForConnection = search.get('promptForConnection') as string
+    const loginToken = search.get('loginToken') as string
+    const email = search.get('associateEmail') as string
     const instanceId = search.get('instanceId') as InstanceID
 
     if (!error) {
       if (type === 'connection') {
         const user = useHookstate(getMutableState(AuthState)).user
         AuthService.refreshConnections(user.id.value!)
-      } else {
+      } else if (type === 'login') {
         let redirectSuccess = `${path}`
         if (instanceId != null) redirectSuccess += `?instanceId=${instanceId}`
         AuthService.loginUserByJwt(token, redirectSuccess || '/', '/')
       }
     }
 
-    setState({ ...state, error, token })
+    setState({ ...state, error, token, promptForConnection, email, loginToken })
   }, [])
 
   function redirectToRoot() {
     window.location.href = '/'
+  }
+
+  function doRedirect(connect = false) {
+    const path = search.get('path') as string
+    const loginToken = search.get('loginToken') as string
+    const instanceId = search.get('instanceId') as InstanceID
+    let redirect = config.client.clientUrl
+    if (path != null) redirect += path
+    if (instanceId != null) redirect += `?instanceId=${instanceId}`
+    window.location.href = `${
+      config.client.serverUrl
+    }/login/${loginToken}?redirectUrl=${redirect}&associate=${connect.toString()}`
   }
 
   return state.error && state.error !== '' ? (
@@ -73,6 +89,19 @@ const GoogleCallbackComponent = (props): JSX.Element => {
       <Button onClick={redirectToRoot} className={styles.gradientButton}>
         {t('user:oauth.redirectToRoot')}
       </Button>
+    </Container>
+  ) : state.promptForConnection === 'true' ? (
+    <Container className={styles.promptForConnection}>
+      <div className={styles.title}>{t('user:oauth.promptForConnection')}</div>
+      <div className={styles.message}>{t('user:oauth.askConnection', { service: 'Google', email: state.email })}</div>
+      <div className="flex">
+        <Button onClick={() => doRedirect(true)} style={{ color: 'primary' }} className={styles.acceptBtn}>
+          {t('user:oauth.acceptConnection')}
+        </Button>
+        <Button onClick={() => doRedirect(false)} className={styles.declineBtn}>
+          {t('user:oauth.declineConnection')}
+        </Button>
+      </div>
     </Container>
   ) : (
     <Container>{t('user:oauth.authenticating')}</Container>

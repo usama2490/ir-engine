@@ -27,23 +27,28 @@ import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
+import { config } from '@ir-engine/common/src/config'
 import { InstanceID } from '@ir-engine/common/src/schema.type.module'
 import Box from '@ir-engine/ui/src/primitives/mui/Box'
 import Container from '@ir-engine/ui/src/primitives/mui/Container'
 import Typography from '@ir-engine/ui/src/primitives/mui/Typography'
 
+import Button from '@ir-engine/ui/src/primitives/mui/Button'
 import { AuthService } from '../../services/AuthService'
+import styles from '../Oauth/styles.module.scss'
 
-interface Props {
-  //auth: any
-  type: string
-  token: string
-  instanceId: InstanceID
-  path: string
-}
-
-const AuthMagicLink = ({ token, type, instanceId, path }: Props): JSX.Element => {
+const AuthMagicLink = (): JSX.Element => {
   const { t } = useTranslation()
+
+  const search = new URLSearchParams(useLocation().search)
+  const token = search.get('token') as string
+  const type = search.get('type') as string
+  const path = search.get('path') as string
+  const instanceId = search.get('instanceId') as InstanceID
+  const promptForConnection = search.get('promptForConnection') as string
+  const loginToken = search.get('loginToken') as string
+  const email = search.get('associateEmail') as string
+
   useEffect(() => {
     if (type === 'login') {
       let redirectSuccess = path ? `${path}` : null
@@ -55,25 +60,38 @@ const AuthMagicLink = ({ token, type, instanceId, path }: Props): JSX.Element =>
     }
   }, [])
 
-  return (
+  function doRedirect(connect = false) {
+    let redirect = /https:\/\//.test(path) ? path : config.client.clientUrl + path
+    console.log('added path', redirect)
+    if (instanceId != null) redirect += `?instanceId=${instanceId}`
+    console.log('redirect with instanceId', redirect)
+    window.location.href = `${
+      config.client.serverUrl
+    }/login/${loginToken}?redirectUrl=${redirect}&associate=${connect.toString()}`
+  }
+
+  return promptForConnection === 'true' ? (
+    <Container className={styles.promptForConnection}>
+      <div className={styles.title}>{t('user:magicLink.promptForConnection')}</div>
+      <div className={styles.message}>{t('user:magicLink.askConnection', { email: email })}</div>
+      <div className="flex">
+        <Button onClick={() => doRedirect(true)} style={{ color: 'primary' }} className={styles.acceptBtn}>
+          {t('user:magicLink.acceptConnection')}
+        </Button>
+        <Button onClick={() => doRedirect(false)} className={styles.declineBtn}>
+          {t('user:magicLink.declineConnection')}
+        </Button>
+      </div>
+    </Container>
+  ) : (
     <Container component="main" maxWidth="md">
       <Box mt={3}>
         <Typography variant="body2" color="textSecondary" align="center">
-          {t('user:magikLink.wait')}
+          {t('user:magicLink.wait')}
         </Typography>
       </Box>
     </Container>
   )
 }
 
-const AuthMagicLinkWrapper = (props: any): JSX.Element => {
-  const search = new URLSearchParams(useLocation().search)
-  const token = search.get('token') as string
-  const type = search.get('type') as string
-  const path = search.get('path') as string
-  const instanceId = search.get('instanceId') as InstanceID
-
-  return <AuthMagicLink {...props} token={token} type={type} instanceId={instanceId} path={path} />
-}
-
-export default AuthMagicLinkWrapper
+export default AuthMagicLink
